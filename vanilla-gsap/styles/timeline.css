@@ -23,7 +23,7 @@
     background: var(--block-color);
     color: white;
     border: 1px solid var(--border-color);
-    /* border-radius: 2px; */
+    border-radius: 8px;
     padding: 0.4rem 0.6rem;
     box-sizing: border-box;
     height: 80px;
@@ -134,7 +134,7 @@
     font-size: 11px;
     padding: 2px 3px;
     /* border-radius: 0 0 0 8px; */
-    color: var(--text-secondary);
+    color: var(--primary-color);
     cursor: pointer;
     z-index: 1000; /* Significantly higher z-index to be above everything */
     user-select: none;
@@ -144,17 +144,17 @@
 
 .timeline-block-badge.badge-xd {
     /* background: rgba(53, 182, 111, 0.2);  */
-    color: var(--accent-color-primary);
+    /* color: var(--accent-color-primary); */
 }
 
 .timeline-block-badge.badge-pm {
     /* background: rgba(182, 154, 53, 0.2);  */
-    color: var(--accent-color-tertiary);
+    /* color: var(--accent-color-tertiary); */
 }
 
 .timeline-block-badge.badge-pd {
     /* background: rgba(77, 82, 220, 0.2); --accent-color-quaternary at 40% opacity */
-    color: var(--accent-color-quaternary);
+    /* color: var(--accent-color-quaternary); */
 }
 
 .timeline-block.block-badge-xd {
