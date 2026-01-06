@@ -1,0 +1,418 @@
+.timeline-track {
+    position: relative;
+    min-height: 120px;
+    padding: 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    background-image: 
+        repeating-linear-gradient(
+            to bottom,
+            transparent,
+            transparent calc(120px - var(--gridline-width, 1px)),
+            var(--gridline-color) calc(120px - var(--gridline-width, 1px)),
+            var(--gridline-color) 120px
+        );
+    background-position: 0 2rem;
+    cursor: crosshair;
+    /* Vertical gridlines are now rendered dynamically in JavaScript */
+}
+
+.timeline-block {
+    position: absolute;
+    background: var(--block-color);
+    color: white;
+    border: 1px solid var(--border-color);
+    /* border-radius: 2px; */
+    padding: 0.4rem 0.6rem;
+    box-sizing: border-box;
+    height: 80px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    cursor: grab;
+    user-select: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.timeline-block.temp-block {
+    opacity: 0.6;
+    border: 1px dashed var(--border-color);
+    pointer-events: none;
+    transition: none; /* No transition during drag */
+}
+
+.timeline-block.selected {
+    outline: 1px dashed var(--text-tertiary);
+    outline-offset: 4px;
+    box-shadow: 0px 0px 12px 5px rgba(56, 56, 56, 0.15);
+}
+
+.timeline-block:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.timeline-block.dragging {
+    cursor: grabbing;
+    opacity: 0.7;
+    z-index: 1000;
+    transform: scale(1.05);
+}
+
+.timeline-block.resizing {
+    mask: none !important;
+    -webkit-mask: none !important;
+}
+
+.timeline-block .resize-handle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    cursor: ew-resize;
+    background: var(--background-secondary);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 10; /* Below badge (badge is z-index: 11) */
+}
+
+.timeline-block:hover .resize-handle {
+    opacity: 0.4;
+}
+
+.timeline-block .resize-handle:hover {
+    background: var(--background-secondary);
+}
+
+.timeline-block .label {
+    pointer-events: all;
+    font-size: 14px;
+    max-width: 100%;
+    cursor: text;
+    white-space: normal;
+    overflow: hidden;
+    line-height: 1.4;
+    min-height: 1em;
+    width: 100%;
+    display: block;
+    max-height: 80px; /* blockHeight - matches block height */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.timeline-block .label-input {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid white;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    color: white;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 300;
+    width: 100%;
+    outline: none;
+    resize: none;
+    min-height: 1.4em;
+    max-height: 80px; /* blockHeight - matches block height */
+    overflow-y: auto;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.timeline-block-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 11px;
+    padding: 2px 3px;
+    /* border-radius: 0 0 0 8px; */
+    color: var(--text-secondary);
+    cursor: pointer;
+    z-index: 1000; /* Significantly higher z-index to be above everything */
+    user-select: none;
+    font-weight: 300;
+    pointer-events: auto; /* Ensure badge is clickable */
+}
+
+.timeline-block-badge.badge-xd {
+    /* background: rgba(53, 182, 111, 0.2);  */
+    color: var(--accent-color-primary);
+}
+
+.timeline-block-badge.badge-pm {
+    /* background: rgba(182, 154, 53, 0.2);  */
+    color: var(--accent-color-tertiary);
+}
+
+.timeline-block-badge.badge-pd {
+    /* background: rgba(77, 82, 220, 0.2); --accent-color-quaternary at 40% opacity */
+    color: var(--accent-color-quaternary);
+}
+
+.timeline-block.block-badge-xd {
+    border-color: var(--accent-color-primary);
+    background-color: var(--accent-color-primary-bg);
+}
+
+.timeline-block.block-badge-pm {
+    border-color: var(--accent-color-tertiary);
+    background-color: var(--accent-color-tertiary-bg);
+}
+
+.timeline-block.block-badge-pd {
+    border-color: var(--accent-color-quaternary);
+    background-color: var(--accent-color-quaternary-bg);
+}
+
+.annotation-hover-indicator {
+    position: absolute;
+    z-index: 1999; /* Below annotations but above everything else */
+    pointer-events: all;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+}
+
+.annotation-hover-indicator .annotation-hover-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: var(--background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.annotation-hover-indicator .annotation-hover-circle span {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1;
+}
+
+.annotation {
+    position: absolute;
+    z-index: 2000; /* Top layer - above all other elements */
+    cursor: pointer;
+    transform: translate(-50%, 0); /* Centered horizontally */
+}
+
+.annotation.selected {
+    outline: 2px solid var(--accent-color-secondary);
+    outline-offset: 2px;
+    border-radius: 50%;
+}
+
+.annotation-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.annotation-circle-inner {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid var(--text-secondary);
+    background: var(--background-secondary);
+    cursor: pointer;
+}
+
+.annotation-input-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.annotation-input {
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 300;
+    color: var(--text-primary);
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid var(--border-color);
+    border-radius: 2px;
+    padding: 4px 8px;
+    outline: none;
+    min-width: 100px;
+}
+
+.annotation-tooltip {
+    position: absolute;
+    background: var(--background-secondary);
+    color: var(--text-primary);
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 300;
+    z-index: 2001; /* Above annotations */
+    pointer-events: none;
+    transform: translate(-50%, 0);
+    left: 50%;
+    top: 16px; /* Aligned to circle bottom (circle diameter is 16px) */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: nowrap; /* Default to single-line, overridden by .multi-line class */
+    max-width: 200px;
+}
+
+.annotation-tooltip.single-line {
+    white-space: nowrap;
+    max-width: 200px;
+}
+
+.annotation-tooltip.multi-line {
+    white-space: normal;
+    max-width: 200px;
+}
+
+.annotation-tooltip.hidden {
+    display: none;
+}
+
+.insert-indicator {
+    position: absolute;
+    width: 4px;
+    height: 100px;
+    background: var(--primary-color);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 100;
+}
+
+.insert-indicator.visible {
+    opacity: 1;
+}
+
+.insert-button {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    z-index: 50;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.insert-button.visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.insert-button:hover {
+    transform: scale(1.1);
+    background: var(--secondary-color);
+}
+
+.drop-zone {
+    position: absolute;
+    height: 100px;
+    background: var(--drop-zone-color);
+    border: 2px dashed var(--primary-color);
+    border-radius: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 99;
+}
+
+.drop-zone.active {
+    opacity: 0.5;
+}
+
+.gridline-vertical {
+    position: absolute;
+    top: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: var(--gridline-color);
+}
+
+.weekend-day {
+    position: absolute;
+    top: 0;
+    background: var(--primary-color);
+    pointer-events: none;
+    z-index: 1;
+    background-image: 
+        repeating-linear-gradient(
+            to bottom,
+            transparent,
+            transparent calc(120px - var(--gridline-width, 1px)),
+            var(--gridline-color) calc(120px - var(--gridline-width, 1px)),
+            var(--gridline-color) 120px
+        );
+    background-position: 0 2rem;
+    /* Vertical gridlines are now rendered dynamically in JavaScript */
+}
+
+.date-label {
+    position: absolute;
+    top: 0.5rem;
+    font-size: 10px;
+    color: var(--text-secondary);
+    font-weight: 300;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10000;
+    mask: none;
+    -webkit-mask: none;
+}
+
+.hover-date-label {
+    position: absolute;
+    top: 8px;
+    font-size: 10px;
+    color: var(--text-secondary);
+    font-weight: 300;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10000;
+    mask: none;
+    -webkit-mask: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    transform: translateX(-50%);
+}
+
+.tooltip {
+    position: absolute;
+    background: var(--background);
+    color: var(--text-primary);
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 300;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.tooltip.visible {
+    opacity: 1;
+}
+

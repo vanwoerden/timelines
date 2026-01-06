@@ -1,0 +1,16 @@
+{
+  "name": "timeline-editor",
+  "version": "1.0.0",
+  "description": "Timeline editor with three framework implementations",
+  "scripts": {
+    "dev": "vite",
+    "dev:gsap": "cd vanilla-gsap && npx serve -p 3000",
+    "dev:interact": "cd vanilla-interact && npx serve -p 3001",
+    "dev:svelte": "cd svelte && npm run dev",
+    "build:svelte": "cd svelte && npm run build"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
+

@@ -1,0 +1,278 @@
+@font-face {
+    font-family: 'PP Neue Montreal Mono';
+    src: url('../assets/fonts/PPNeueMontrealMono-Thin.otf') format('opentype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PP Neue Montreal Mono';
+    src: url('../assets/fonts/PPNeueMontrealMono-Book.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PP Neue Montreal Mono';
+    src: url('../assets/fonts/PPNeueMontrealMono-Medium.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PP Neue Montreal Mono';
+    src: url('../assets/fonts/PPNeueMontrealMono-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+:root {
+    --primary-color: #131313;
+    --secondary-color: #4a4a4a;
+
+    --block-color: #00000040;
+    --block-color-light: #cacaca80;
+
+    /* background colors */
+    --background: #0f0f0f;
+    --background-secondary: #191a1a;
+    --timeline-bg: #0d0c0c;
+
+    /* border colors */
+    --border-color: #3a3e3c;
+    --gridline-color: #2b2929;
+    --gridline-width: 1px;
+
+    /* text colors */
+    --text-primary: #f1f1f1;
+    --text-secondary: #a0a0a0;
+    --text-tertiary: #505050;
+    --hover-color: #2a2a2a;
+    --drop-zone-color: #3a3a3a;
+    --day-line-color: #4a4a4a;
+
+    /* accent colors */
+    --accent-color-primary: #35b66f;
+    --accent-color-secondary: #b635a5;
+    --accent-color-tertiary: #b69a35;
+    --accent-color-quaternary: #4d52dc;
+    --border-secondary: #2e302f;
+    
+    /* badge background colors with 0.8 opacity */
+    --accent-color-primary-bg: rgba(120, 211, 161, 0.6);  /* XD green */
+    /* --accent-color-primary-bg: rgba(182, 182, 182, 0.8);   */
+    --accent-color-tertiary-bg: rgba(227, 201, 106, 0.6);  /* PM yellow */
+    --accent-color-quaternary-bg: rgba(137, 141, 243, 0.6); /* PD blue */
+
+    --space-extralarge: 2rem;
+    --space-large: 1.5rem;
+    --space-medium: 1rem;
+    --space-small: 0.5rem;
+    --space-extrasmall: 0.25rem;
+    --spacing-unit: 8px;
+    
+    /* mask configuration */
+    --mask-corner-radius: 500px;
+    
+    /* control heights */
+    --control-height: 32px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'PP Neue Montreal Mono', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 300;
+    background: var(--background);
+    color: var(--text-primary);
+    overflow: hidden;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.controls {
+    display: flex;
+    align-items: end;
+    gap: 2rem;
+    padding: 1rem 2rem;
+    background: var(--timeline-bg);
+    border-bottom: 2px solid var(--gridline-color);
+    flex-wrap: wrap;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+}
+
+.control-group label {
+    font-weight: 300;
+    color: var(--text-secondary);
+    font-size: 10px;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.auto-save-status {
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 300;
+    margin-left: 0.5rem;
+}
+
+.zoom-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-timeline);
+    color: var(--text-primary);
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.zoom-btn:hover {
+    background: #2a2a2a;
+    border-color: var(--border-color);
+}
+
+#zoomLevel {
+    min-width: 50px;
+    text-align: center;
+}
+
+.preset-select {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-timeline);
+    color: var(--text-primary);
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.date-input {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0;
+    background: var(--bg-timeline);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    height: var(--control-height);
+    box-sizing: border-box;
+}
+
+.action-btn {
+    padding: var(--space-small) var(--space-medium);
+    border: 1px solid var(--border-secondary);
+    background: var(--background);
+    color: white;
+    border-radius: 0;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 400;
+    color: --text-secondary;
+    transition: all 0.2s ease;
+    height: var(--control-height);
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-btn:hover {
+    background: var(--background-secondary);
+    border-color: var(--secondary-color);
+}
+
+.timeline-container {
+    flex: 1;
+    overflow: auto;
+    position: relative;
+    background: var(--timeline-bg);
+}
+
+/* Split button styles */
+.split-button-group {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-width: 180px;
+}
+
+.split-btn-primary {
+    border-right: none;
+    border-radius: 0;
+    flex: 1;
+    min-width: 0;
+}
+
+.split-btn-dropdown {
+    width: 32px;
+    padding: 0;
+    min-width: 32px;
+    border-left: 1px solid var(--border-secondary);
+    font-size: 0.75rem;
+}
+
+.split-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 2px;
+    background: var(--background);
+    border: 1px solid var(--border-secondary);
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    min-width: 180px;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.split-dropdown-menu.show {
+    display: flex;
+}
+
+.split-dropdown-item {
+    width: 100%;
+    text-align: left;
+    padding: var(--space-small) var(--space-medium);
+    border: none;
+    /* border-bottom: 1px solid var(--border-secondary); */
+    background: transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.split-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.split-dropdown-item:hover {
+    background: var(--background-secondary);
+}
+
+
